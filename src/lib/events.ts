@@ -30,9 +30,9 @@ export async function listEvents(): Promise<Event[]> {
 }
 
 export async function getEvent(id: string): Promise<Event> {
-  const { data, error } = await supabase.from('events').select('*').eq('id', id).single();
+  const { data, error } = await supabase.rpc('get_event', { p_id: id }).single();
   if (error) throw error;
-  return data;
+  return data as Event;
 }
 
 export async function createEvent(input: {
@@ -56,13 +56,9 @@ export async function createEvent(input: {
 }
 
 export async function listRsvps(eventId: string): Promise<Rsvp[]> {
-  const { data, error } = await supabase
-    .from('rsvps')
-    .select('*')
-    .eq('event_id', eventId)
-    .order('updated_at', { ascending: true });
+  const { data, error } = await supabase.rpc('get_event_rsvps', { p_id: eventId });
   if (error) throw error;
-  return data;
+  return data as Rsvp[];
 }
 
 export async function setRsvp(eventId: string, name: string, status: RsvpStatus) {
