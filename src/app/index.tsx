@@ -1,12 +1,10 @@
-import { Link, Stack, useFocusEffect, useRouter } from 'expo-router';
+import { Link, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
 
-import { signOut } from '@/lib/auth';
 import { Event, formatWhen, listEvents } from '@/lib/events';
 
 export default function EventsScreen() {
-  const router = useRouter();
   const [events, setEvents] = useState<Event[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -36,23 +34,6 @@ export default function EventsScreen() {
 
   return (
     <View className="flex-1 bg-night">
-      <Stack.Screen
-        options={{
-          headerRight: () => (
-            <View className="flex-row items-center gap-2 pr-4">
-              <Pressable
-                onPress={() => router.push('/new')}
-                className="rounded-full bg-brand px-4 py-2 active:bg-brand-dark"
-              >
-                <Text className="font-bold text-white">+ Create</Text>
-              </Pressable>
-              <Pressable onPress={signOut} className="px-3 py-2">
-                <Text className="font-bold text-white/70">Sign out</Text>
-              </Pressable>
-            </View>
-          ),
-        }}
-      />
       {error && <Text className="px-5 pt-4 text-red-300">{error}</Text>}
       <FlatList
         data={events ?? []}

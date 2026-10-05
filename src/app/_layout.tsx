@@ -4,6 +4,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, View } from 'react-native';
 
+import { TopBar } from '@/components/top-bar';
 import { AuthProvider, useSession } from '@/lib/auth';
 
 function Routes() {
@@ -20,6 +21,7 @@ function Routes() {
   return (
     <Stack
       screenOptions={{
+        header: () => <TopBar />,
         headerStyle: { backgroundColor: '#1d1530' },
         headerTintColor: '#ffffff',
         headerTitleStyle: { fontWeight: '800' },
@@ -28,8 +30,8 @@ function Routes() {
     >
       <Stack.Protected guard={!!session}>
         <Stack.Screen name="index" options={{ title: 'kaibi' }} />
-        <Stack.Screen name="new" options={{ title: 'New event', presentation: 'modal' }} />
-        <Stack.Screen name="event/[id]" options={{ title: 'Event' }} />
+        <Stack.Screen name="new" options={{ title: 'New event' }} />
+        <Stack.Screen name="event/[id]" />
       </Stack.Protected>
       <Stack.Protected guard={!session}>
         <Stack.Screen name="sign-in" options={{ headerShown: false }} />

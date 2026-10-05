@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, Platform, ScrollView, Share, Text, View } from 'react-native';
 import * as Linking from 'expo-linking';
@@ -83,15 +83,6 @@ export default function EventScreen() {
 
   return (
     <ScrollView className="flex-1 bg-night" contentContainerClassName="items-center px-5 pb-16 pt-4">
-      <Stack.Screen
-        options={{
-          title: '',
-          headerTransparent: false,
-          headerShadowVisible: false,
-          headerStyle: { backgroundColor: '#1d1530' },
-          headerTintColor: '#ffffff',
-        }}
-      />
       <View className="w-full max-w-2xl gap-6">
         <View className="flex-row items-start gap-4">
           <View className="flex-1 gap-2">
