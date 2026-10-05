@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "kaibi",
+  "compatibility_date": "2026-10-01",
+  "pages_build_output_dir": "./dist",
+  "vars": {
+    "EXPO_PUBLIC_SUPABASE_URL": "https://kblreyseazaitdebskfp.supabase.co",
+    "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_jXc1PwuQiWCaokmNz-sy0g_aidwHXnZ"
+  }
+}
