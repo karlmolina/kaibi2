@@ -52,7 +52,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "build:web": "expo export -p web",
-    "deploy": "expo export -p web && wrangler pages deploy"
+    "deploy": "wrangler deploy"
   },
   "private": true,
   "overrides": {
