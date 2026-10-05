@@ -37,7 +37,7 @@ export default function NewEventScreen() {
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-night">
-      <ScrollView contentContainerClassName="gap-5 p-5" keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerClassName="w-full max-w-2xl gap-5 self-center p-5" keyboardShouldPersistTaps="handled">
         <TextInput
           value={title}
           onChangeText={setTitle}

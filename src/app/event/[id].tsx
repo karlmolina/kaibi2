@@ -71,12 +71,13 @@ export default function EventScreen() {
   const group = (s: RsvpStatus) => rsvps.filter((r) => r.status === s);
 
   return (
-    <ScrollView className="flex-1 bg-night" contentContainerClassName="gap-6 p-5 pb-16">
+    <ScrollView className="flex-1 bg-night" contentContainerClassName="w-full max-w-2xl gap-6 self-center p-5 pb-16">
       <Stack.Screen
         options={{
           title: '',
           headerRight: () => (
             <Pressable
+              className="mr-4"
               onPress={async () => {
                 const url = Linking.createURL(`/event/${event.id}`);
                 if (Platform.OS === 'web') {

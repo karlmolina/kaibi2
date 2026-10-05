@@ -39,9 +39,17 @@ export default function EventsScreen() {
       <Stack.Screen
         options={{
           headerRight: () => (
-            <Pressable onPress={signOut}>
-              <Text className="font-bold text-white/70">Sign out</Text>
-            </Pressable>
+            <View className="flex-row items-center gap-2 pr-4">
+              <Pressable
+                onPress={() => router.push('/new')}
+                className="rounded-full bg-brand px-4 py-2 active:bg-brand-dark"
+              >
+                <Text className="font-bold text-white">+ Create</Text>
+              </Pressable>
+              <Pressable onPress={signOut} className="px-3 py-2">
+                <Text className="font-bold text-white/70">Sign out</Text>
+              </Pressable>
+            </View>
           ),
         }}
       />
@@ -49,7 +57,7 @@ export default function EventsScreen() {
       <FlatList
         data={events ?? []}
         keyExtractor={(e) => e.id}
-        contentContainerClassName="gap-3 p-5 pb-28"
+        contentContainerClassName="w-full max-w-2xl gap-3 self-center p-5"
         refreshing={refreshing}
         onRefresh={async () => {
           setRefreshing(true);
@@ -60,7 +68,7 @@ export default function EventsScreen() {
           <View className="items-center gap-2 pt-24">
             <Text className="text-5xl">🎉</Text>
             <Text className="text-lg font-bold text-white">No parties yet</Text>
-            <Text className="text-white/60">Tap + to throw the first one.</Text>
+            <Text className="text-white/60">Tap + Create to throw the first one.</Text>
           </View>
         }
         renderItem={({ item }) => (
@@ -75,12 +83,6 @@ export default function EventsScreen() {
           </Link>
         )}
       />
-      <Pressable
-        onPress={() => router.push('/new')}
-        className="absolute bottom-8 right-6 h-16 w-16 items-center justify-center rounded-full bg-brand active:bg-brand-dark"
-      >
-        <Text className="text-4xl font-light leading-none text-white">+</Text>
-      </Pressable>
     </View>
   );
 }
