@@ -1,9 +1,9 @@
-import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, Platform, ScrollView, Share, Text, View } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Dimensions, Modal, Pressable, Platform, ScrollView, Share, Text, View } from 'react-native';
 import * as Linking from 'expo-linking';
 
-import { Event, formatWhen, getEvent, listRsvps, Rsvp, RsvpStatus, setRsvp } from '@/lib/events';
+import { Event, formatWhen, getEvent, listRsvps, removeRsvp, Rsvp, RsvpStatus, setRsvp } from '@/lib/events';
 import { displayNameOf, useSession } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 import { notify } from '@/lib/notify';
@@ -22,6 +22,8 @@ export default function EventScreen() {
   const userId = session?.user.id ?? null;
   const displayName = displayNameOf(session);
   const [error, setError] = useState<string | null>(null);
+  const [menu, setMenu] = useState<{ top: number; right: number } | null>(null);
+  const menuButton = useRef<View>(null);
 
   useEffect(() => {
     Promise.all([getEvent(id), listRsvps(id)])
@@ -79,6 +81,16 @@ export default function EventScreen() {
     }
   }
 
+  async function leave() {
+    setMenu(null);
+    try {
+      await removeRsvp(id);
+      router.replace('/');
+    } catch (e) {
+      notify('Could not remove you', e instanceof Error ? e.message : 'Try again');
+    }
+  }
+
   const group = (s: RsvpStatus) => rsvps.filter((r) => r.status === s);
 
   return (
@@ -102,6 +114,21 @@ export default function EventScreen() {
           >
             <Text className="text-lg">🔗</Text>
           </Pressable>
+          {mine && (
+            <View ref={menuButton} collapsable={false}>
+              <Pressable
+                onPress={() =>
+                  menuButton.current?.measureInWindow((x, y, w, h) =>
+                    setMenu({ top: y + h + 4, right: Math.max(8, Dimensions.get('window').width - x - w) }),
+                  )
+                }
+                accessibilityLabel="More options"
+                className="h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 active:opacity-70"
+              >
+                <Text className="text-lg font-bold text-white">⋯</Text>
+              </Pressable>
+            </View>
+          )}
         </View>
 
         {event.description && <Text className="text-base leading-6 text-white/80">{event.description}</Text>}
@@ -147,6 +174,20 @@ export default function EventScreen() {
           );
         })}
       </View>
+      <Modal transparent visible={!!menu} animationType="none" onRequestClose={() => setMenu(null)}>
+        <Pressable className="flex-1" onPress={() => setMenu(null)}>
+          {menu && (
+            <View
+              style={{ position: 'absolute', top: menu.top, right: menu.right }}
+              className="w-52 overflow-hidden rounded-2xl border border-white/20 bg-night"
+            >
+              <Pressable onPress={leave} className="px-4 py-3 active:bg-white/10">
+                <Text className="font-bold text-red-300">Remove me from event</Text>
+              </Pressable>
+            </View>
+          )}
+        </Pressable>
+      </Modal>
     </ScrollView>
   );
 }

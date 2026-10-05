@@ -73,6 +73,13 @@ export async function setRsvp(eventId: string, name: string, status: RsvpStatus)
   if (error) throw error;
 }
 
+export async function removeRsvp(eventId: string) {
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) throw new Error('Not signed in');
+  const { error } = await supabase.from('rsvps').delete().eq('event_id', eventId).eq('user_id', auth.user.id);
+  if (error) throw error;
+}
+
 export function formatWhen(iso: string) {
   return new Date(iso).toLocaleString(undefined, {
     weekday: 'short',

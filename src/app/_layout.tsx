@@ -1,14 +1,15 @@
-import '@/global.css';
+import "@/global.css";
 
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, View } from 'react-native';
+import { Stack, useSegments } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { ActivityIndicator, View } from "react-native";
 
-import { TopBar } from '@/components/top-bar';
-import { AuthProvider, useSession } from '@/lib/auth';
+import { TopBar } from "@/components/top-bar";
+import { AuthProvider, useSession } from "@/lib/auth";
 
 function Routes() {
   const { session, loading } = useSession();
+  const segments = useSegments();
 
   if (loading) {
     return (
@@ -18,26 +19,30 @@ function Routes() {
     );
   }
 
+  // Rendered here rather than as a per-screen header so it also shows when a screen is opened directly from a link.
+  const showTopBar =
+    !!session && segments[0] !== "sign-in" && segments[0] !== "auth";
+
   return (
-    <Stack
-      screenOptions={{
-        header: () => <TopBar />,
-        headerStyle: { backgroundColor: '#1d1530' },
-        headerTintColor: '#ffffff',
-        headerTitleStyle: { fontWeight: '800' },
-        contentStyle: { backgroundColor: '#1d1530' },
-      }}
-    >
-      <Stack.Protected guard={!!session}>
-        <Stack.Screen name="index" options={{ title: 'kaibi' }} />
-        <Stack.Screen name="new" options={{ title: 'New event' }} />
-        <Stack.Screen name="event/[id]" />
-      </Stack.Protected>
-      <Stack.Protected guard={!session}>
-        <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-      </Stack.Protected>
-      <Stack.Screen name="auth/callback" options={{ headerShown: false }} />
-    </Stack>
+    <View className="flex-1 bg-night">
+      {showTopBar && <TopBar />}
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: "#1d1530" },
+        }}
+      >
+        <Stack.Protected guard={!!session}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="new" />
+          <Stack.Screen name="event/[id]" />
+        </Stack.Protected>
+        <Stack.Protected guard={!session}>
+          <Stack.Screen name="sign-in" />
+        </Stack.Protected>
+        <Stack.Screen name="auth/callback" />
+      </Stack>
+    </View>
   );
 }
 
