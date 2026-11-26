@@ -54,3 +54,29 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## "Anyone down?" invites and text alerts
+
+Users post a casual invite ("anyone down for pool tonight?") from the home screen. Every friend who has
+turned on text alerts gets an SMS with a link, and can tap "I'm interested" and suggest a time and a place.
+The host gets one text per friend who says they're in.
+
+- Friends are mutual and added by opening someone's friend link (Friends screen → Share friend link).
+- Phone numbers and the SMS opt-in live in `profiles` and are only readable by their owner and the edge function.
+- SMS goes out from the `notify-invite` Supabase Edge Function through Twilio. Without Twilio config the app
+  still works; texts are just skipped. Hosts are limited to 5 texted invites per hour.
+
+### Setup
+
+```bash
+supabase db push                                   # applies supabase/migrations/0003_invites.sql
+supabase secrets set \
+  APP_URL=https://your-deployed-kaibi-url \
+  TWILIO_ACCOUNT_SID=AC... \
+  TWILIO_AUTH_TOKEN=... \
+  TWILIO_MESSAGING_SERVICE_SID=MG...               # or TWILIO_FROM=+1...
+supabase functions deploy notify-invite
+```
+
+US numbers need an A2P 10DLC registration (or a verified toll-free number) in Twilio before carriers will
+deliver messages.

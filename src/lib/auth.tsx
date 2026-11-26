@@ -4,6 +4,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { Platform } from 'react-native';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
+import { ensureProfile } from './friends';
 import { supabase } from './supabase';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -20,6 +21,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data } = supabase.auth.onAuthStateChange((_event, session) => setState({ session, loading: false }));
     return () => data.subscription.unsubscribe();
   }, []);
+
+  const userId = state.session?.user.id;
+  useEffect(() => {
+    if (userId) ensureProfile(userId, displayNameOf(state.session));
+    // Only when the signed-in user changes, not on every token refresh.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
 }
