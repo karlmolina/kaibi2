@@ -36,6 +36,9 @@ function Routes() {
           <Stack.Screen name="index" />
           <Stack.Screen name="new" />
           <Stack.Screen name="event/[id]" />
+          <Stack.Screen name="invite/[id]" />
+          <Stack.Screen name="friends" />
+          <Stack.Screen name="friend/[id]" />
         </Stack.Protected>
         <Stack.Protected guard={!session}>
           <Stack.Screen name="sign-in" />

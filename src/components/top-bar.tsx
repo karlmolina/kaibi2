@@ -15,6 +15,9 @@ export function TopBar() {
           <Text className="text-lg font-extrabold text-white">kaibi</Text>
         </Pressable>
         <View className="flex-row items-center gap-2">
+          <Pressable onPress={() => router.push('/friends')} className="px-3 py-2">
+            <Text className="font-bold text-white/70">Friends</Text>
+          </Pressable>
           <Pressable
             onPress={() => router.push('/new')}
             className="rounded-full bg-brand px-4 py-2 active:bg-brand-dark"
